@@ -1,0 +1,133 @@
+/* CONTAINER */
+.slider-container {
+    display: flex;
+    width: 90vw;
+    /* FIX: Calculate height dynamically to avoid overlapping the dock */
+    height: 55vh; 
+    
+    /* Centering Logic */
+    position: absolute;
+    top: 45%; 
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    gap: 15px;
+    align-items: center;
+    transition: all 0.5s ease;
+    z-index: 10;
+}
+
+/* PANELS */
+.panel {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100%;
+    border-radius: 20px;
+    color: #fff;
+    cursor: pointer;
+    flex: 0.5;
+    margin: 0;
+    position: relative;
+    transition: flex 0.7s cubic-bezier(0.25, 1, 0.5, 1), 
+                filter 0.5s ease, 
+                transform 0.3s ease;
+    border: 1px solid rgba(212, 175, 55, 0.1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    overflow: hidden;
+    filter: grayscale(100%) brightness(0.5);
+}
+
+.panel:not(.active):hover {
+    flex: 1;
+    filter: grayscale(0%) brightness(1);
+    border-color: var(--gold);
+    transform: translateY(-10px);
+}
+
+.panel.active {
+    flex: 5;
+    filter: grayscale(0%) brightness(1.1);
+    border: 2px solid var(--gold);
+    box-shadow: 0 0 50px rgba(212, 175, 55, 0.2);
+    z-index: 10;
+    cursor: default;
+}
+
+.panel::before {
+    content: '';
+    position: absolute; top:0; left:0; width:100%; height:100%;
+    background: linear-gradient(0deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.2) 100%);
+    transition: 0.5s;
+}
+
+/* VERTICAL TITLE */
+.vertical-title {
+    position: absolute;
+    bottom: 50%; left: 50%;
+    transform: translate(-50%, 50%) rotate(-90deg);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: rgba(255,255,255,0.3);
+    white-space: nowrap;
+    letter-spacing: 3px;
+    transition: 0.4s ease;
+    pointer-events: none;
+    z-index: 5;
+    opacity: 1;
+}
+
+.panel.active .vertical-title { opacity: 0; }
+.panel:not(.active):hover .vertical-title {
+    color: var(--gold);
+    text-shadow: 0 0 20px var(--gold);
+    font-size: 1.8rem;
+}
+
+/* CONTENT */
+.panel-content {
+    position: absolute;
+    bottom: 30px; left: 30px; right: 30px;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.5s ease-out;
+    z-index: 6;
+}
+
+.panel.active .panel-content {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.5s;
+}
+
+.panel-title {
+    font-size: 2.5rem;
+    color: var(--gold);
+    margin: 0;
+    text-shadow: 0 0 20px rgba(0,0,0,0.8);
+    text-transform: uppercase;
+}
+
+.panel-desc {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: #ccc;
+    max-width: 600px;
+}
+
+/* MOBILE FIX */
+@media (max-width: 768px) {
+    .slider-container {
+        flex-direction: column; 
+        width: 95vw; 
+        height: 65vh;
+        top: 40%;
+    }
+    .panel.active { flex: 6; }
+    .vertical-title {
+        transform: translate(-50%, 50%) rotate(0deg);
+        bottom: 15px;
+        font-size: 1rem;
+    }
+}

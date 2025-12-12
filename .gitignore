@@ -1,0 +1,13 @@
+# Python junk
+__pycache__/
+*.py[cod]
+
+# Virtual Environments (if you use them)
+venv/
+env/
+.venv/
+
+# Sensitive Data (Crucial for security apps!)
+.env
+config.py
+api_keys.txt

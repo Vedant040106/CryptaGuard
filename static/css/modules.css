@@ -1,0 +1,109 @@
+/* MODULE LAYOUT */
+#module-container {
+    padding-top: 100px; /* Space for fixed header */
+    height: 100vh;
+    overflow-y: auto;
+    background: radial-gradient(circle at 50% 50%, rgba(10, 26, 47, 0.4), transparent);
+}
+
+.module-wrapper {
+    max-width: 900px;
+    margin: 0 auto 50px auto;
+    animation: fadeUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* HEADER SECTION */
+.module-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+.module-header h1 {
+    font-size: 2.5rem;
+    color: var(--gold);
+    margin: 0;
+    text-shadow: 0 0 20px var(--gold-dim);
+}
+.module-header p {
+    color: var(--text-muted);
+    font-size: 1rem;
+    margin-top: 10px;
+    letter-spacing: 1px;
+}
+
+/* GLASS PANEL (The Main Card) */
+.glass-panel {
+    background: rgba(12, 15, 20, 0.6); /* Dark tint */
+    border: 1px solid rgba(255, 255, 255, 0.08); /* Very subtle border */
+    border-top: 1px solid rgba(255, 255, 255, 0.15); /* Top highlight */
+    padding: 40px;
+    border-radius: 20px;
+    backdrop-filter: blur(16px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5); /* Deep shadow */
+    position: relative;
+    overflow: hidden;
+}
+
+/* Decoration Line */
+.glass-panel::before {
+    content: '';
+    position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0.5;
+}
+
+/* INPUTS */
+.input-group { margin-bottom: 25px; }
+
+label {
+    display: block;
+    color: var(--cyan);
+    font-size: 0.8rem;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+input[type="text"], input[type="file"], textarea {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    font-family: var(--font-body);
+    transition: 0.3s;
+    box-sizing: border-box;
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--cyan);
+    box-shadow: 0 0 15px var(--cyan-dim);
+    background: rgba(0, 0, 0, 0.5);
+}
+
+/* RESULT TERMINAL */
+.console-output {
+    background: #000;
+    border: 1px solid #333;
+    padding: 20px;
+    border-radius: 8px;
+    font-family: 'Courier New', monospace;
+    color: #0f0;
+    min-height: 100px;
+    margin-top: 30px;
+    position: relative;
+}
+.console-output::before {
+    content: 'TERMINAL_OUTPUT';
+    position: absolute; top: 5px; right: 10px;
+    font-size: 0.6rem; color: #555;
+}
+.log-entry { margin-bottom: 5px; }
+.log-entry.error { color: var(--danger); }
+.log-entry.success { color: var(--cyan); }

@@ -1,0 +1,233 @@
+/* GLOBAL THEME VARIABLES */
+:root {
+    /* Deepest Dark Backgrounds (Non-Eye Popping) */
+    --bg-dark: #020408; 
+    --bg-panel: rgba(12, 20, 35, 0.6); /* Slightly blue-tinted glass */
+    
+    /* Premium Neons (Balanced) */
+    --gold: #D4AF37;
+    --gold-dim: rgba(212, 175, 55, 0.15); /* Subtle glow */
+    --cyan: #00f3ff;
+    --cyan-dim: rgba(0, 243, 255, 0.1);
+    --danger: #ff2a2a;
+    
+    /* Text */
+    --text-main: #e0e6ed; /* Off-white is better for eyes */
+    --text-muted: #8b9bb4;
+    
+    /* Fonts */
+    --font-head: 'Orbitron', sans-serif;
+    --font-body: 'Roboto Mono', monospace;
+}
+
+body {
+    margin: 0;
+    background-color: var(--bg-dark);
+    font-family: var(--font-body);
+    color: var(--text-main);
+    overflow: hidden;
+    height: 100vh;
+}
+
+/* TOP NAV (Fixed & Glassy) */
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background: rgba(2, 4, 8, 0.85); /* Darker glass */
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+    position: fixed; top: 0; width: 100%; z-index: 1000;
+    box-sizing: border-box;
+}
+
+.brand {
+    font-family: var(--font-head);
+    font-size: 1.4rem;
+    color: var(--gold);
+    cursor: pointer;
+    letter-spacing: 2px;
+    text-shadow: 0 0 15px rgba(212, 175, 55, 0.3); /* Soft glow */
+    transition: 0.3s;
+}
+.brand:hover { text-shadow: 0 0 25px rgba(212, 175, 55, 0.6); }
+
+/* Status Pill */
+.status-indicator {
+    color: var(--cyan);
+    font-size: 0.8rem;
+    background: rgba(0, 243, 255, 0.05);
+    padding: 6px 16px;
+    border-radius: 50px;
+    border: 1px solid rgba(0, 243, 255, 0.2);
+    display: flex; align-items: center; gap: 8px;
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.1);
+}
+
+/* BACKGROUND GRID (Subtle & Moving) */
+.cyber-grid {
+    position: fixed; top: 0; left: 0; width: 200%; height: 200%;
+    background-image: 
+        linear-gradient(rgba(212, 175, 55, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(212, 175, 55, 0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    transform: perspective(600px) rotateX(60deg) translateY(-100px) translateZ(-200px);
+    animation: gridMove 40s linear infinite;
+    z-index: -2;
+    pointer-events: none;
+}
+@keyframes gridMove { 100% { transform: perspective(600px) rotateX(60deg) translateY(60px) translateZ(-200px); } }
+
+.vignette {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle, transparent 40%, #020408 100%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* GLOBAL BUTTONS (Cyber Style) */
+.cyber-btn {
+    background: linear-gradient(90deg, rgba(212, 175, 55, 0.1), transparent);
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    padding: 12px 24px;
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+}
+
+.cyber-btn:hover {
+    background: var(--gold);
+    color: #000;
+    box-shadow: 0 0 20px var(--gold-dim);
+}
+
+.cyber-btn.cyan {
+    border-color: var(--cyan);
+    color: var(--cyan);
+    background: linear-gradient(90deg, rgba(0, 243, 255, 0.1), transparent);
+}
+.cyber-btn.cyan:hover {
+    background: var(--cyan);
+    color: #000;
+    box-shadow: 0 0 20px var(--cyan-dim);
+}
+
+/* UTILS */
+.hidden { display: none !important; }
+.back-btn {
+    position: absolute; top: 80px; left: 40px;
+    background: transparent; border: none; color: var(--text-muted);
+    font-family: var(--font-head); cursor: pointer; font-size: 1rem;
+    transition: 0.3s; z-index: 10;
+}
+.back-btn:hover { color: var(--gold); transform: translateX(-5px); }
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #020408; }
+::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+/* BOTTOM DOCK CONTAINER */
+.bottom-dock {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px;
+    padding: 15px 30px;
+    background: rgba(5, 11, 20, 0.85);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    z-index: 100;
+    width: auto;
+}
+
+/* DOCK BUTTONS */
+.dock-btn {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #888;
+    padding: 10px 25px;
+    border-radius: 12px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Icon styling */
+.dock-btn i {
+    font-size: 1.2rem;
+    color: #555;
+    transition: 0.3s;
+}
+
+/* HOVER EFFECTS - NEON GLOW */
+.dock-btn:hover {
+    border-color: var(--gold);
+    color: #fff;
+    background: rgba(212, 175, 55, 0.1);
+    transform: translateY(-5px);
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+}
+
+.dock-btn:hover i {
+    color: var(--gold);
+    text-shadow: 0 0 10px var(--gold);
+}
+
+/* SPECIAL COLOR FOR CHAT (CYAN) */
+.dock-btn.cyan-glow:hover {
+    border-color: var(--cyan);
+    background: rgba(0, 243, 255, 0.1);
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+}
+.dock-btn.cyan-glow:hover i {
+    color: var(--cyan);
+    text-shadow: 0 0 10px var(--cyan);
+}
+
+/* MOBILE RESPONSIVE */
+@media (max-width: 768px) {
+    .bottom-dock {
+        width: 90%;
+        bottom: 10px;
+        padding: 10px;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .dock-btn {
+        flex: 1;
+        justify-content: center;
+        padding: 10px;
+        font-size: 0.7rem;
+    }
+    .slider-container {
+        height: 50vh; /* Smaller slider on mobile */
+    }
+}
+
+@keyframes ticker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); } /* Moves halfway because we duplicated the text */
+}

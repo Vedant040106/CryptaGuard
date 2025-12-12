@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypta Guard | Access Control</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+</head>
+<body>
+
+    <div class="cyber-grid"></div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div id="flash-container" style="position:fixed; top:20px; right:20px; z-index:1000;">
+                {% for category, message in messages %}
+                    <div class="flash-msg" style="background:rgba(0,0,0,0.8); color: #fff; padding:15px; border:1px solid #D4AF37; margin-bottom:10px; border-radius:5px;">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <div class="container" id="container">
+        
+        <div class="form-container sign-up-container">
+            <form action="{{ url_for('register') }}" method="POST">
+                <h1>CREATE ACCOUNT</h1>
+                
+                <span style="margin-top: 20px;">Use your email for registration</span>
+                
+                <div class="input-group">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" name="username" placeholder="Username" required />
+                </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input type="email" name="email" placeholder="Email" required />
+                </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" name="password" placeholder="Password" required />
+                </div>
+                <button class="cyber-btn">REGISTER</button>
+            </form>
+        </div>
+
+        <div class="form-container sign-in-container">
+            <form action="{{ url_for('login') }}" method="POST">
+                <h1>ACCESS PORTAL</h1>
+                
+                <span style="margin-top: 20px;">Use your account</span>
+                
+                <div class="input-group">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input type="email" name="email" placeholder="Email" required />
+                </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-key"></i>
+                    <input type="password" name="password" placeholder="Password" required />
+                </div>
+                <a href="#" class="forgot-pass">Forgot your password?</a>
+                <button class="cyber-btn">LOGIN</button>
+            </form>
+        </div>
+
+        <div class="overlay-container">
+            <div class="overlay">
+                <div class="overlay-panel overlay-left">
+                    <h1>WELCOME BACK!</h1>
+                    <p>Authenticate to access secure modules.</p>
+                    <button class="ghost" id="signIn">SIGN IN</button>
+                </div>
+                <div class="overlay-panel overlay-right">
+                    <h1>HELLO, AGENT!</h1>
+                    <p>Enter your details to establish a secure ID.</p>
+                    <button class="ghost" id="signUp">SIGN UP</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
+    
+    <script>
+        setTimeout(() => {
+            const flash = document.getElementById('flash-container');
+            if(flash) flash.style.display = 'none';
+        }, 4000);
+    </script>
+</body>
+</html>

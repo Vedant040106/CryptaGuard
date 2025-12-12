@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Crypta Guard | Elite Cyber Defense</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/images/favicon-16x16.png">
+    <link rel="manifest" href="/static/images/site.webmanifest">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/slider.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modules.css') }}">
+
+    <style>
+        /* Tool Backgrounds */
+        #p-phishing { background-image: url("{{ url_for('static', filename='images/phishing.jpg') }}"); }
+        #p-stego { background-image: url("{{ url_for('static', filename='images/stego.jpg') }}"); }
+        #p-malware { background-image: url("{{ url_for('static', filename='images/malware.jpg') }}"); }
+        #p-qr { background-image: url("{{ url_for('static', filename='images/qr.jpg') }}"); }
+        #p-crypto { background-image: url("{{ url_for('static', filename='images/crypto.jpg') }}"); }
+        #p-password { background-image: url("{{ url_for('static', filename='images/password.jpg') }}"); }
+    </style>
+</head>
+
+<body data-logged-in="{{ 'true' if logged_in else 'false' }}" data-username="{{ username }}">
+
+    <div class="cyber-grid"></div>
+    <div class="scan-line"></div>
+    <div class="vignette"></div>
+
+    <header class="top-nav">
+        <div class="brand" onclick="location.reload()">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="CG" style="height: 40px; vertical-align:middle; margin-right:10px;">
+            CRYPTA GUARD
+        </div>
+        
+        <div class="status-indicator">
+            <span class="dot"></span> SYSTEM ONLINE
+        </div>
+
+        <div class="auth-status">
+            <span style="color:var(--gold); font-family:'Orbitron'; font-size:0.9rem; letter-spacing:1px;">
+                HI, {{ username }}
+            </span>
+            
+            {% if logged_in %}
+                <a href="{{ url_for('logout') }}" style="margin-left:15px; color:#666; text-decoration:none; font-size:0.8rem;">[LOGOUT]</a>
+            {% else %}
+                <a href="{{ url_for('login') }}" class="cyber-btn" style="padding: 5px 15px; font-size: 0.8rem; margin-top:0; margin-left: 15px;">LOGIN / REGISTER</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <main id="app-root">
+        
+        <div class="slider-container" id="hero-slider">
+            
+            <div class="panel active" id="p-phishing">
+                <h2 class="vertical-title">PHISHING</h2>
+                <div class="panel-content">
+                    <h3 class="panel-title"><i class="fa-solid fa-fish-fins"></i> Phishing</h3>
+                    <div class="panel-desc">
+                        <p>Deep scan URLs for deceptive patterns.</p>
+                        <button class="cyber-btn" onclick="router('phishing')">SCAN URL</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel" id="p-stego">
+                <h2 class="vertical-title">STEGO LAB</h2>
+                <div class="panel-content">
+                    <h3 class="panel-title"><i class="fa-solid fa-image"></i> Stego Lab</h3>
+                    <div class="panel-desc">
+                        <p>Hide intelligence within image pixels.</p>
+                        <button class="cyber-btn" onclick="router('steganography')">OPEN LAB</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel" id="p-malware">
+                <h2 class="vertical-title">MALWARE</h2>
+                <div class="panel-content">
+                    <h3 class="panel-title"><i class="fa-solid fa-bug"></i> Malware</h3>
+                    <div class="panel-desc">
+                        <p>Heuristic analysis of suspicious files.</p>
+                        <button class="cyber-btn" onclick="router('malware')">ANALYZE</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel" id="p-qr">
+                <h2 class="vertical-title">QR GUARD</h2>
+                <div class="panel-content">
+                    <h3 class="panel-title"><i class="fa-solid fa-qrcode"></i> QR Guard</h3>
+                    <div class="panel-desc">
+                        <p>Secure QR generation and fraud detection.</p>
+                        <button class="cyber-btn" onclick="router('qr')">ACCESS</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel" id="p-crypto">
+                <h2 class="vertical-title">CRYPTO</h2>
+                <div class="panel-content">
+                    <h3 class="panel-title"><i class="fa-solid fa-lock"></i> Crypto</h3>
+                    <div class="panel-desc">
+                        <p>Military-grade text encryption engine.</p>
+                        <button class="cyber-btn" onclick="router('encryption')">ACCESS</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel" id="p-password">
+                <h2 class="vertical-title">PASS GEN</h2>
+                <div class="panel-content">
+                    <h3 class="panel-title"><i class="fa-solid fa-key"></i> Pass Gen</h3>
+                    <div class="panel-desc">
+                        <p>Entropy-based password generator.</p>
+                        <button class="cyber-btn" onclick="router('password')">GENERATE</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="bottom-dock" id="main-dock">
+            <button class="dock-btn" onclick="router('history')">
+                <i class="fa-solid fa-clock-rotate-left"></i> HISTORY
+            </button>
+            
+            <button class="dock-btn" onclick="router('about')">
+                <i class="fa-solid fa-circle-info"></i> ABOUT US
+            </button>
+            
+            <button class="dock-btn cyan-glow" onclick="router('chatbot')">
+                <i class="fa-solid fa-robot"></i> AI ASSIST
+            </button>
+            
+            <button class="dock-btn cyan-glow" onclick="router('support')">
+                <i class="fa-solid fa-comments"></i> SECURE CHAT
+            </button>
+        </div>
+
+        <div id="module-container" class="hidden">
+            <button class="back-btn" onclick="showHome()"><i class="fa-solid fa-arrow-left"></i> RETURN TO HUB</button>
+            <div id="module-content"></div>
+        </div>
+
+    </main>
+
+    <script src="{{ url_for('static', filename='js/modules.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/slider.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

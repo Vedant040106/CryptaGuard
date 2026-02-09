@@ -139,7 +139,8 @@ const templates = {
                     <button class="cyber-btn cyan" onclick="ModuleSystem.scanQR()" style="width:100%; margin-bottom:20px;">ANALYZE IMAGE</button>
                     
                     <div class="console-output" id="terminal" style="height:180px; border-color:var(--cyan);">
-                        <div class="log-entry" style="color:#666;">> System Ready for Analysis...</div>
+                        <button onclick="ModuleSystem.clearLog()" style="position:absolute; top:5px; right:5px; background:rgba(255,0,0,0.2); border:1px solid #ff2a2a; color:#ff2a2a; font-size:0.6rem; cursor:pointer; padding:2px 5px; z-index:10;">CLEAR</button>
+                        <div class="log-entry" style="color:#666; margin-top:10px;">> System Ready for Analysis...</div>
                     </div>
                 </div>
 
@@ -329,4 +330,16 @@ function router(moduleName) {
     } else {
         content.innerHTML = `<h1 style="text-align:center; margin-top:100px;">COMING SOON</h1>`;
     }
+}
+
+function showHome() {
+    // Hide module container and show home dashboard
+    const container = document.getElementById('module-container');
+    if(container) container.classList.add('hidden');
+    
+    const slider = document.getElementById('hero-slider');
+    if(slider) slider.classList.remove('hidden');
+    
+    const dock = document.getElementById('main-dock');
+    if(dock) dock.style.display = 'flex';
 }

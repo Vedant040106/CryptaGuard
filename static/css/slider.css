@@ -3,14 +3,14 @@
     display: flex;
     width: 90vw;
     /* FIX: Calculate height dynamically to avoid overlapping the dock */
-    height: 55vh; 
-    
+    height: 55vh;
+
     /* Centering Logic */
     position: absolute;
-    top: 45%; 
+    top: 45%;
     left: 50%;
     transform: translate(-50%, -50%);
-    
+
     gap: 15px;
     align-items: center;
     transition: all 0.5s ease;
@@ -29,47 +29,68 @@
     flex: 0.5;
     margin: 0;
     position: relative;
-    transition: flex 0.7s cubic-bezier(0.25, 1, 0.5, 1), 
-                filter 0.5s ease, 
-                transform 0.3s ease;
-    border: 1px solid rgba(212, 175, 55, 0.1);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    transition: flex 0.7s cubic-bezier(0.25, 1, 0.5, 1),
+        filter 0.5s ease,
+        transform 0.3s ease;
+    border: 1px solid var(--gold);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
     overflow: hidden;
-    filter: grayscale(100%) brightness(0.5);
+    /* Removed filter from here to allow border to be colored */
+    color: var(--text-muted);
+    /* Dim text by default */
 }
 
 .panel:not(.active):hover {
     flex: 1;
-    filter: grayscale(0%) brightness(1);
     border-color: var(--gold);
     transform: translateY(-10px);
+    color: #fff;
+    /* Brighten text on hover */
 }
 
 .panel.active {
     flex: 5;
-    filter: grayscale(0%) brightness(1.1);
+    /* Active state styling */
     border: 2px solid var(--gold);
     box-shadow: 0 0 50px rgba(212, 175, 55, 0.2);
     z-index: 10;
     cursor: default;
+    color: #fff;
 }
 
 .panel::before {
     content: '';
-    position: absolute; top:0; left:0; width:100%; height:100%;
-    background: linear-gradient(0deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.2) 100%);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.2) 100%);
     transition: 0.5s;
+    /* Apply grayscale here so it sits BEHIND the border (border is outside stacking context of child) */
+    backdrop-filter: grayscale(100%) brightness(0.5);
+    z-index: 1;
+    /* Ensure it sits above background but below text */
+}
+
+.panel:not(.active):hover::before {
+    backdrop-filter: grayscale(0%) brightness(1);
+}
+
+.panel.active::before {
+    backdrop-filter: none;
 }
 
 /* VERTICAL TITLE */
 .vertical-title {
     position: absolute;
-    bottom: 50%; left: 50%;
+    bottom: 50%;
+    left: 50%;
     transform: translate(-50%, 50%) rotate(-90deg);
     font-family: 'Orbitron', sans-serif;
     font-size: 1.5rem;
     font-weight: 900;
-    color: rgba(255,255,255,0.3);
+    color: rgba(255, 255, 255, 0.3);
     white-space: nowrap;
     letter-spacing: 3px;
     transition: 0.4s ease;
@@ -78,7 +99,10 @@
     opacity: 1;
 }
 
-.panel.active .vertical-title { opacity: 0; }
+.panel.active .vertical-title {
+    opacity: 0;
+}
+
 .panel:not(.active):hover .vertical-title {
     color: var(--gold);
     text-shadow: 0 0 20px var(--gold);
@@ -88,7 +112,9 @@
 /* CONTENT */
 .panel-content {
     position: absolute;
-    bottom: 30px; left: 30px; right: 30px;
+    bottom: 30px;
+    left: 30px;
+    right: 30px;
     opacity: 0;
     transform: translateY(30px);
     transition: all 0.5s ease-out;
@@ -105,7 +131,7 @@
     font-size: 2.5rem;
     color: var(--gold);
     margin: 0;
-    text-shadow: 0 0 20px rgba(0,0,0,0.8);
+    text-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
     text-transform: uppercase;
 }
 
@@ -119,12 +145,16 @@
 /* MOBILE FIX */
 @media (max-width: 768px) {
     .slider-container {
-        flex-direction: column; 
-        width: 95vw; 
+        flex-direction: column;
+        width: 95vw;
         height: 65vh;
         top: 40%;
     }
-    .panel.active { flex: 6; }
+
+    .panel.active {
+        flex: 6;
+    }
+
     .vertical-title {
         transform: translate(-50%, 50%) rotate(0deg);
         bottom: 15px;

@@ -1,12 +1,14 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, send_from_directory
 import mysql.connector
+from mysql.connector import errorcode
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from config import Config
 import feedparser
 import requests
 import hashlib
+import google.generativeai as genai
 from stego_engine import StegoModule
 
 # Initialize the Steganography Tool
@@ -14,6 +16,12 @@ stego_tool = StegoModule()
 
 app = Flask(__name__)
 app.config.from_object(Config)
+
+# Initialize Gemini AI
+if app.config.get('GEMINI_API_KEY'):
+    genai.configure(api_key=app.config['GEMINI_API_KEY'])
+else:
+    print("WARNING: GEMINI_API_KEY not set in config.py. AI features will fail.")
 
 # --- ABSOLUTE PATH CONFIGURATION ---
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -86,23 +94,122 @@ def login():
     return render_template('login.html')
 
 # 4. Register (RESTORED)
+# 4. Register (RESTORED)
 @app.route('/register', methods=['POST'])
 def register():
     username = request.form.get('username')
     email = request.form.get('email')
     password = request.form.get('password')
+    security_question = request.form.get('security_question')
+    security_answer = request.form.get('security_answer')
+
     hashed_pw = generate_password_hash(password)
+    hashed_answer = generate_password_hash(security_answer.lower().strip()) # Store hash of answer
+
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO users (username, email, password_hash) VALUES (%s, %s, %s)", 
-                       (username, email, hashed_pw))
+        cursor.execute("INSERT INTO users (username, email, password_hash, security_question, security_answer_hash) VALUES (%s, %s, %s, %s, %s)", 
+                       (username, email, hashed_pw, security_question, hashed_answer))
         conn.commit()
         conn.close()
         flash('Registration successful!', 'success')
-    except:
-        flash('User already exists.', 'error')
-    return redirect(url_for('login'))
+        return redirect(url_for('login'))
+    except mysql.connector.Error as err:
+        if err.errno == errorcode.ER_DUP_ENTRY:
+            error_msg = str(err)
+            if 'username' in error_msg:
+                flash(f"Username '{username}' is already taken.", 'error')
+            elif 'email' in error_msg:
+                flash(f"Email '{email}' is already registered.", 'error')
+            else:
+                flash('User already exists.', 'error')
+        else:
+            flash(f"Database error: {err}", 'error')
+        return redirect(url_for('login'))
+
+# --- FORGOT PASSWORD FLOW ---
+@app.route('/forgot-password', methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        try:
+            conn = get_db_connection()
+            cursor = conn.cursor(dictionary=True)
+            cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
+            user = cursor.fetchone()
+            conn.close()
+
+            if user:
+                session['reset_user_id'] = user['id']
+                session['security_question'] = user.get('security_question', 'No question set')
+                return redirect(url_for('verify_question'))
+            else:
+                flash('No account found with that email.', 'error')
+        except Exception as e:
+            flash(f'Error: {e}', 'error')
+            
+    return render_template('forgot_password.html')
+
+@app.route('/verify-question', methods=['GET', 'POST'])
+def verify_question():
+    if 'reset_user_id' not in session:
+        return redirect(url_for('forgot_password'))
+        
+    if request.method == 'POST':
+        answer = request.form.get('answer', '').lower().strip()
+        user_id = session['reset_user_id']
+        
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT security_answer_hash FROM users WHERE id = %s", (user_id,))
+        user_data = cursor.fetchone()
+        conn.close()
+        
+        if user_data and check_password_hash(user_data['security_answer_hash'], answer):
+            session['reset_verified'] = True
+            return redirect(url_for('reset_password'))
+        else:
+            flash('Incorrect answer. Please try again.', 'error')
+
+    return render_template('verify_question.html', question_text=session.get('security_question'))
+
+@app.route('/reset-password', methods=['GET', 'POST'])
+def reset_password():
+    if 'reset_verified' not in session or not session.get('reset_verified'):
+        return redirect(url_for('forgot_password'))
+        
+    if request.method == 'POST':
+        password = request.form.get('password')
+        confirm_password = request.form.get('confirm_password')
+        
+        if password != confirm_password:
+            flash('Passwords do not match.', 'error')
+        else:
+            hashed_pw = generate_password_hash(password)
+            user_id = session['reset_user_id']
+            
+            try:
+                conn = get_db_connection()
+                if conn:
+                    cursor = conn.cursor()
+                    cursor.execute("UPDATE users SET password_hash = %s WHERE id = %s", (hashed_pw, user_id))
+                    conn.commit()
+                    conn.close()
+                    
+                    # Clear recovery session
+                    session.pop('reset_user_id', None)
+                    session.pop('security_question', None)
+                    session.pop('reset_verified', None)
+                    
+                    flash('Password successfully reset! Please login.', 'success')
+                    return redirect(url_for('login'))
+                else:
+                    flash('Database connection failed. Please try again.', 'error')
+            except Exception as e:
+                flash(f'An error occurred: {e}', 'error')
+            
+    return render_template('reset_password.html')
 
 # 5. Logout (RESTORED - Fixes the Crash)
 @app.route('/logout')
@@ -345,6 +452,30 @@ def log_tool():
     data = request.json
     log_activity(data['module'], data['action'], data['status'])
     return jsonify({'status': 'logged'})
+
+# --- AI ASSISTANT API ---
+@app.route('/api/ask_ai', methods=['POST'])
+def ask_ai():
+    data = request.json
+    query = data.get('query', '')
+    
+    if not query:
+        return jsonify({'error': 'Empty query'})
+        
+    try:
+        if not app.config.get('GEMINI_API_KEY') or 'YOUR_GEMINI_API_KEY' in app.config['GEMINI_API_KEY']:
+             return jsonify({'response': "System Error: AI Neural Link Offline (API Key Missing)."})
+
+        # Updated to use the latest available model from the user's list
+        model = genai.GenerativeModel('gemini-2.5-flash')
+        
+        # Security Context Injection
+        context = "You are CryptaGuard AI, an elite cybersecurity assistant. Answer strictly in a professional, cybersecurity-focused context. Keep answers concise (under 100 words) and use a technical but accessible tone. Query: "
+        
+        response = model.generate_content(context + query)
+        return jsonify({'response': response.text})
+    except Exception as e:
+        return jsonify({'response': f"System Check Failed: {str(e)}"})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

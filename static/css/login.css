@@ -114,7 +114,7 @@ span {
     z-index: 10;
 }
 
-input {
+input, select {
     background: rgba(0,0,0,0.4);
     border: 1px solid rgba(255,255,255,0.1);
     padding: 12px 15px 12px 45px;
@@ -122,8 +122,20 @@ input {
     color: #fff;
     border-radius: 5px;
     font-family: var(--font-body);
+    appearance: none; /* Remove default arrow to style consistently or keep it simple */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
 }
-input:focus { outline: none; border-color: var(--cyan); }
+
+/* Re-add custom arrow for select if needed, or simple padding adjustment */
+/* For now, just ensuring it matches input style is key */
+select option {
+    background: #000;
+    color: #fff;
+}
+
+input:focus, select:focus { outline: none; border-color: var(--cyan); }
 
 button {
     border-radius: 20px;

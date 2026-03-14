@@ -10,7 +10,6 @@ env/
 
 # Sensitive Data
 .env
-config.py
 api_keys.txt
 
 # Uploads (user-generated content)
@@ -18,3 +17,4 @@ static/uploads/
 
 # Logs
 *.log
+.vercel

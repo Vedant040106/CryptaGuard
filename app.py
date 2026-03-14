@@ -17,6 +17,13 @@ stego_tool = StegoModule()
 app = Flask(__name__)
 app.config.from_object(Config)
 
+# Serve static files in production (gunicorn doesn't serve them by default)
+try:
+    from whitenoise import WhiteNoise
+    app.wsgi_app = WhiteNoise(app.wsgi_app, root='static/', prefix='static/')
+except ImportError:
+    pass  # WhiteNoise not installed, Flask dev server handles it
+
 # Initialize Gemini AI
 if app.config.get('GEMINI_API_KEY'):
     genai.configure(api_key=app.config['GEMINI_API_KEY'])

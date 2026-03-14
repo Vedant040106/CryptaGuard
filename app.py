@@ -94,7 +94,6 @@ def login():
     return render_template('login.html')
 
 # 4. Register (RESTORED)
-# 4. Register (RESTORED)
 @app.route('/register', methods=['POST'])
 def register():
     username = request.form.get('username')

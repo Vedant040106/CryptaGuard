@@ -1,13 +1,20 @@
 # Python junk
 __pycache__/
 *.py[cod]
+*.pyc
 
-# Virtual Environments (if you use them)
+# Virtual Environments
 venv/
 env/
 .venv/
 
-# Sensitive Data (Crucial for security apps!)
+# Sensitive Data
 .env
 config.py
 api_keys.txt
+
+# Uploads (user-generated content)
+static/uploads/
+
+# Logs
+*.log

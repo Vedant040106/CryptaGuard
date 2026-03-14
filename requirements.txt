@@ -1,3 +1,10 @@
 Flask
 mysql-connector-python
 werkzeug
+google-generativeai
+feedparser
+requests
+opencv-python
+numpy
+gunicorn
+python-dotenv

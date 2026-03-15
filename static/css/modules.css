@@ -110,3 +110,82 @@ input:focus, textarea:focus {
 .log-entry { margin-bottom: 5px; }
 .log-entry.error { color: var(--danger); }
 .log-entry.success { color: var(--cyan); }
+
+/* MOBILE RESPONSIVE */
+@media (max-width: 768px) {
+    #module-container {
+        padding-top: 70px;
+    }
+    .module-wrapper {
+        max-width: 100%;
+        margin: 0 10px 50px 10px;
+    }
+    .module-header h1 {
+        font-size: 1.5rem;
+    }
+    .module-header p {
+        font-size: 0.85rem;
+    }
+    .glass-panel {
+        padding: 20px;
+        border-radius: 12px;
+    }
+    /* Force 2-col grids to single column on mobile */
+    .glass-panel[style*="grid-template-columns"] {
+        grid-template-columns: 1fr !important;
+    }
+    .console-output {
+        padding: 12px;
+        font-size: 0.8rem;
+        min-height: 80px;
+    }
+}
+
+@media (max-width: 480px) {
+    .module-header h1 {
+        font-size: 1.2rem;
+    }
+    .glass-panel {
+        padding: 15px;
+    }
+    label {
+        font-size: 0.7rem;
+    }
+}
+
+/* Responsive grid override for JS-injected inline styles */
+@media (max-width: 768px) {
+    .glass-panel {
+        display: block !important;
+    }
+    .glass-panel > div[style*="border-right"] {
+        border-right: none !important;
+        padding-right: 0 !important;
+        border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+    }
+    /* Chat support layout */
+    .glass-panel[style*="display:flex"] {
+        flex-direction: column !important;
+        height: auto !important;
+    }
+    .glass-panel[style*="display:flex"] > div[style*="width:30%"],
+    .glass-panel[style*="display:flex"] > div[style*="width:70%"] {
+        width: 100% !important;
+    }
+    .glass-panel[style*="display:flex"] > div[style*="width:70%"] {
+        min-height: 350px;
+    }
+    /* History table scroll */
+    .glass-panel[style*="max-height"] {
+        overflow-x: auto;
+    }
+    .glass-panel table {
+        min-width: 500px;
+    }
+    /* Threat map iframe */
+    .glass-panel div[style*="height:500px"] {
+        height: 250px !important;
+    }
+}

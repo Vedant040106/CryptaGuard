@@ -6,6 +6,9 @@ load_dotenv()
 class Config:
     # Session security
     SECRET_KEY = os.environ.get('SECRET_KEY')
+    SESSION_COOKIE_HTTPONLY = True   # Prevent JS access to session cookie (XSS defense)
+    SESSION_COOKIE_SAMESITE = 'Lax' # CSRF protection
+    SESSION_COOKIE_SECURE = os.environ.get('FLASK_ENV') == 'production'  # HTTPS only in prod
 
     # AI configuration
     GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')

@@ -245,3 +245,93 @@ button.ghost:hover { background: #fff; color: #000; }
 
 .overlay-right { right: 0; transform: translateX(0); }
 .container.right-panel-active .overlay-right { transform: translateX(20%); }
+
+/* MOBILE TOGGLE LINK (hidden on desktop) */
+.mobile-toggle {
+    display: none;
+    margin-top: 15px;
+    color: #d4af37;
+    font-size: 0.85rem;
+    cursor: pointer;
+    text-decoration: underline;
+    background: none;
+    border: none;
+    font-family: var(--font-body);
+}
+
+/* MOBILE RESPONSIVE */
+@media (max-width: 768px) {
+    .container {
+        width: 90%;
+        min-height: auto;
+        max-width: 400px;
+    }
+
+    /* Hide the overlay panel completely on mobile */
+    .overlay-container {
+        display: none;
+    }
+
+    /* Make forms full width and stack */
+    .sign-in-container,
+    .sign-up-container {
+        width: 100% !important;
+        position: relative !important;
+        left: auto !important;
+        transform: none !important;
+    }
+
+    /* Default: show sign-in, hide sign-up */
+    .sign-up-container {
+        display: none !important;
+        opacity: 1 !important;
+        z-index: 5 !important;
+    }
+    .sign-in-container {
+        display: block !important;
+        z-index: 5 !important;
+    }
+
+    /* When toggled: show sign-up, hide sign-in */
+    .container.right-panel-active .sign-up-container {
+        display: block !important;
+        animation: none;
+    }
+    .container.right-panel-active .sign-in-container {
+        display: none !important;
+    }
+
+    /* Show the mobile toggle link */
+    .mobile-toggle {
+        display: inline-block;
+    }
+
+    form {
+        padding: 30px 25px;
+        position: relative;
+    }
+
+    h1 {
+        font-size: 1.3rem;
+    }
+
+    button {
+        padding: 10px 30px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        width: 95%;
+    }
+    form {
+        padding: 25px 20px;
+    }
+    h1 {
+        font-size: 1.1rem;
+    }
+    input, select {
+        padding: 10px 10px 10px 40px;
+        font-size: 0.85rem;
+    }
+}

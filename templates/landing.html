@@ -129,6 +129,52 @@
             15% { clip: rect(98px, 9999px, 13px, 0); }
             100% { clip: rect(10px, 9999px, 102px, 0); }
         }
+
+        /* MOBILE RESPONSIVE */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+                letter-spacing: 2px;
+            }
+            .container {
+                padding: 35px 25px;
+                width: 92%;
+            }
+            p {
+                font-size: 1rem;
+                letter-spacing: 1px;
+                margin-bottom: 25px;
+            }
+            .btn {
+                padding: 12px 25px;
+                font-size: 0.9rem;
+            }
+            .status-bar {
+                font-size: 0.65rem;
+            }
+            .glitch::before,
+            .glitch::after {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.5rem;
+                letter-spacing: 1px;
+            }
+            .container {
+                padding: 25px 15px;
+            }
+            p {
+                font-size: 0.85rem;
+            }
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.8rem;
+                letter-spacing: 1px;
+            }
+        }
     </style>
 </head>
 <body>

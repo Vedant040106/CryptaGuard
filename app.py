@@ -2,6 +2,7 @@ import os
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, send_from_directory
 import mysql.connector
 from mysql.connector import errorcode
+from mysql.connector.pooling import MySQLConnectionPool
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from config import Config
@@ -17,10 +18,18 @@ stego_tool = StegoModule()
 app = Flask(__name__)
 app.config.from_object(Config)
 
-# Serve static files in production (gunicorn doesn't serve them by default)
+# GZip compression for all responses (major speed boost on slow connections)
+try:
+    from flask_compress import Compress
+    Compress(app)
+except ImportError:
+    pass  # flask-compress not installed
+
+# Serve static files in production with caching (gunicorn doesn't serve them by default)
 try:
     from whitenoise import WhiteNoise
-    app.wsgi_app = WhiteNoise(app.wsgi_app, root='static/', prefix='static/')
+    static_folder = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'static')
+    app.wsgi_app = WhiteNoise(app.wsgi_app, root=static_folder, prefix='static/', max_age=31536000)
 except ImportError:
     pass  # WhiteNoise not installed, Flask dev server handles it
 
@@ -36,9 +45,32 @@ UPLOAD_FOLDER = os.path.join(BASE_DIR, 'static', 'uploads')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-# --- DATABASE CONNECTION ---
+# --- DATABASE CONNECTION POOL ---
+# Reuse connections instead of opening a new TCP+TLS connection per request.
+# This is the single biggest performance fix for remote databases (Railway/PlanetScale).
+try:
+    db_pool = MySQLConnectionPool(
+        pool_name="cryptaguard_pool",
+        pool_size=5,
+        pool_reset_session=True,
+        host=app.config['MYSQL_HOST'],
+        port=app.config['MYSQL_PORT'],
+        user=app.config['MYSQL_USER'],
+        password=app.config['MYSQL_PASSWORD'],
+        database=app.config['MYSQL_DB'],
+        ssl_disabled=False,
+        connect_timeout=10
+    )
+    print("DATABASE POOL: Initialized successfully (pool_size=5)")
+except Exception as e:
+    db_pool = None
+    print(f"DATABASE POOL ERROR: {e}")
+
 def get_db_connection():
     try:
+        if db_pool:
+            return db_pool.get_connection()
+        # Fallback to direct connection if pool failed
         return mysql.connector.connect(
             host=app.config['MYSQL_HOST'],
             port=app.config['MYSQL_PORT'],
@@ -50,6 +82,16 @@ def get_db_connection():
     except Exception as e:
         print(f"DATABASE ERROR: {e}")
         return None
+
+# --- HELPER: AUTH CHECK ---
+def login_required(f):
+    from functools import wraps
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if 'user_id' not in session:
+            return jsonify({'error': 'Unauthorized — login required'}), 401
+        return f(*args, **kwargs)
+    return decorated
 
 # --- HELPER: LOG ACTIVITY ---
 def log_activity(module, action, status):
@@ -233,6 +275,7 @@ def logout():
 
 # --- MALWARE SANDBOX ENGINE (HASHING + EICAR) ---
 @app.route('/api/upload_scan', methods=['POST'])
+@login_required
 def upload_scan():
     if 'file' not in request.files: return jsonify({'error': 'No file'})
     file = request.files['file']
@@ -290,11 +333,13 @@ def upload_scan():
 
 # --- DOWNLOAD ROUTE ---
 @app.route('/uploads/<filename>')
+@login_required
 def download_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 # --- STEGANOGRAPHY ROUTES ---
 @app.route('/api/stego/encode', methods=['POST'])
+@login_required
 def stego_encode():
     if 'file' not in request.files: return jsonify({'error': 'No file'})
     file = request.files['file']
@@ -319,6 +364,7 @@ def stego_encode():
         return jsonify({'error': str(e)})
 
 @app.route('/api/stego/decode', methods=['POST'])
+@login_required
 def stego_decode():
     if 'file' not in request.files: return jsonify({'error': 'No file'})
     file = request.files['file']
@@ -370,6 +416,7 @@ def cyber_news():
     except: return jsonify([])
 
 @app.route('/api/search_user', methods=['POST'])
+@login_required
 def search_user():
     data = request.json
     conn = get_db_connection()
@@ -380,6 +427,7 @@ def search_user():
     return jsonify({'found': bool(user), 'user': user})
 
 @app.route('/api/add_friend', methods=['POST'])
+@login_required
 def add_friend():
     data = request.json
     conn = get_db_connection()
@@ -395,6 +443,7 @@ def add_friend():
     return jsonify({'status': 'sent'})
 
 @app.route('/api/get_requests', methods=['GET'])
+@login_required
 def get_requests():
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
@@ -406,16 +455,19 @@ def get_requests():
     return jsonify(incoming + outgoing)
 
 @app.route('/api/accept_request', methods=['POST'])
+@login_required
 def accept_request():
     data = request.json
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("UPDATE friend_requests SET status = 'accepted' WHERE id = %s", (data['request_id'],))
+    # Only allow accepting requests addressed TO the current user
+    cursor.execute("UPDATE friend_requests SET status = 'accepted' WHERE id = %s AND receiver_id = %s", (data['request_id'], session['user_id']))
     conn.commit()
     conn.close()
     return jsonify({'status': 'accepted'})
 
 @app.route('/api/get_friends', methods=['GET'])
+@login_required
 def get_friends():
     user_id = session['user_id']
     conn = get_db_connection()
@@ -426,6 +478,7 @@ def get_friends():
     return jsonify(friends)
 
 @app.route('/api/send_message', methods=['POST'])
+@login_required
 def send_message():
     data = request.json
     conn = get_db_connection()
@@ -436,6 +489,7 @@ def send_message():
     return jsonify({'status': 'sent'})
 
 @app.route('/api/get_messages', methods=['POST'])
+@login_required
 def get_messages():
     data = request.json
     conn = get_db_connection()
@@ -486,4 +540,4 @@ def ask_ai():
         return jsonify({'response': f"System Check Failed: {str(e)}"})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=False)

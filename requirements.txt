@@ -9,4 +9,3 @@ numpy
 gunicorn
 python-dotenv
 whitenoise
-flask-compress

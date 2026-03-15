@@ -208,80 +208,26 @@ body {
 
 /* MOBILE RESPONSIVE */
 @media (max-width: 768px) {
-    .top-nav {
-        padding: 10px 15px;
-    }
-    .brand {
-        font-size: 1rem;
-        letter-spacing: 1px;
-    }
-    .brand img {
-        height: 28px !important;
-        margin-right: 5px !important;
-    }
-    .status-indicator {
-        display: none;
-    }
-    .auth-status {
-        font-size: 0.75rem;
-    }
-    .auth-status .cyber-btn {
-        padding: 4px 10px !important;
-        font-size: 0.7rem !important;
-    }
-    .back-btn {
-        top: 70px;
-        left: 15px;
-        font-size: 0.85rem;
-    }
     .bottom-dock {
-        width: 92%;
+        width: 90%;
         bottom: 10px;
-        padding: 10px 12px;
-        gap: 8px;
+        padding: 10px;
+        gap: 10px;
         flex-wrap: wrap;
         justify-content: center;
-        border-radius: 15px;
     }
     .dock-btn {
         flex: 1;
         justify-content: center;
-        padding: 10px 8px;
+        padding: 10px;
         font-size: 0.7rem;
-        gap: 5px;
-        min-width: 0;
     }
     .slider-container {
-        height: 50vh;
-    }
-}
-
-@media (max-width: 480px) {
-    .top-nav {
-        padding: 8px 10px;
-    }
-    .brand {
-        font-size: 0.85rem;
-    }
-    .dock-btn span,
-    .dock-btn {
-        font-size: 0;
-    }
-    .dock-btn i {
-        font-size: 1.3rem;
-    }
-    .dock-btn {
-        padding: 12px;
-        font-size: 0;
-    }
-    /* Show icon only — restore icon font-size */
-    .dock-btn i {
-        font-size: 1.2rem;
-        color: #888;
+        height: 50vh; /* Smaller slider on mobile */
     }
 }
 
 @keyframes ticker {
     0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
+    100% { transform: translateX(-50%); } /* Moves halfway because we duplicated the text */
 }

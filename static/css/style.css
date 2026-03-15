@@ -18,6 +18,19 @@
     /* Fonts */
     --font-head: 'Orbitron', sans-serif;
     --font-body: 'Roboto Mono', monospace;
+
+    /* Mobile App Dimensions */
+    --mobile-nav-height: 70px;
+    --mobile-header-height: 60px;
+}
+
+/* RESPONSIVE UTILITIES */
+.desktop-only { display: block !important; }
+.mobile-only { display: none !important; }
+
+@media (max-width: 768px) {
+    .desktop-only { display: none !important; }
+    .mobile-only { display: block !important; }
 }
 
 body {
@@ -206,79 +219,215 @@ body {
     text-shadow: 0 0 10px var(--cyan);
 }
 
-/* MOBILE RESPONSIVE */
+/* ==========================================
+   MOBILE "NATIVE APP" STYLING (Redesign)
+   ========================================== */
+
 @media (max-width: 768px) {
+    body {
+        padding-top: var(--mobile-header-height);
+        padding-bottom: var(--mobile-nav-height);
+        overflow-x: hidden;
+    }
+
+    /* 1. TOP BRAND HEADER */
     .top-nav {
-        padding: 10px 15px;
+        height: var(--mobile-header-height);
+        padding: 0 15px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: rgba(0, 0, 0, 0.9);
+        border-bottom: 1px solid rgba(212, 175, 55, 0.3);
     }
-    .brand {
-        font-size: 1rem;
-        letter-spacing: 1px;
-    }
+
     .brand img {
-        height: 28px !important;
-        margin-right: 5px !important;
+        height: 30px !important;
     }
-    .status-indicator {
-        display: none;
-    }
-    .auth-status {
-        font-size: 0.75rem;
-    }
+
     .auth-status .cyber-btn {
-        padding: 4px 10px !important;
+        padding: 5px 12px !important;
         font-size: 0.7rem !important;
     }
-    .back-btn {
-        top: 70px;
-        left: 15px;
-        font-size: 0.85rem;
+
+    /* 2. MOBILE DASHBOARD */
+    .mobile-dashboard {
+        padding: 20px 15px;
+        animation: fadeIn 0.5s ease-out;
     }
-    .bottom-dock {
-        width: 92%;
-        bottom: 10px;
-        padding: 10px 12px;
-        gap: 8px;
-        flex-wrap: wrap;
-        justify-content: center;
-        border-radius: 15px;
+
+    .mobile-header {
+        margin-bottom: 25px;
     }
-    .dock-btn {
-        flex: 1;
+
+    .mobile-header h2 {
+        color: var(--gold);
+        font-size: 1.4rem;
+        letter-spacing: 2px;
+        margin-bottom: 5px;
+    }
+
+    .mobile-header p {
+        color: #888;
+        font-size: 0.8rem;
+        letter-spacing: 1px;
+    }
+
+    /* 3. CARD GRID */
+    .mobile-card-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+
+    .mobile-card {
+        background: rgba(10, 15, 20, 0.7);
+        border: 1px solid rgba(212, 175, 55, 0.2);
+        border-radius: 12px;
+        padding: 20px 10px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        backdrop-filter: blur(10px);
+    }
+
+    .mobile-card:active {
+        transform: scale(0.95);
+        border-color: var(--gold);
+        background: rgba(212, 175, 55, 0.1);
+    }
+
+    .card-icon {
+        width: 50px;
+        height: 50px;
+        background: rgba(212, 175, 55, 0.1);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
         justify-content: center;
-        padding: 10px 8px;
-        font-size: 0.7rem;
+        font-size: 1.5rem;
+        color: var(--gold);
+        box-shadow: 0 0 15px rgba(212, 175, 55, 0.1);
+    }
+
+    .mobile-card span {
+        font-family: var(--font-main);
+        font-size: 0.75rem;
+        letter-spacing: 1px;
+        color: #eee;
+    }
+
+    /* 4. INFO SECTION */
+    .mobile-info-card {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(0, 0, 0, 0.8));
+        border: 1px solid rgba(0, 255, 255, 0.3);
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+
+    .mobile-info-card i:first-child {
+        font-size: 1.8rem;
+        color: var(--cyan);
+    }
+
+    .info-content h3 {
+        color: #fff;
+        font-size: 1rem;
+        margin-bottom: 2px;
+    }
+
+    .info-content p {
+        color: #aaa;
+        font-size: 0.75rem;
+    }
+
+    .mobile-info-card i:last-child {
+        margin-left: auto;
+        color: var(--cyan);
+        opacity: 0.5;
+    }
+
+    /* 5. FLOATING ACTION BUTTON */
+    .mobile-fab {
+        position: fixed;
+        right: 20px;
+        bottom: 90px;
+        width: 56px;
+        height: 56px;
+        background: var(--gold);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #000;
+        font-size: 1.5rem;
+        box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+        z-index: 1000;
+        transition: transform 0.2s;
+    }
+
+    .mobile-fab:active {
+        transform: scale(0.9) rotate(5deg);
+    }
+
+    /* 6. BOTTOM NAVIGATION */
+    .mobile-bottom-nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: var(--mobile-nav-height);
+        background: rgba(0, 0, 0, 0.95);
+        border-top: 1px solid rgba(212, 175, 55, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        padding-bottom: env(safe-area-inset-bottom);
+        z-index: 2000;
+        backdrop-filter: blur(10px);
+    }
+
+    .nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         gap: 5px;
-        min-width: 0;
+        color: #666;
+        transition: all 0.3s;
+        padding: 10px;
     }
-    .slider-container {
-        height: 50vh;
+
+    .nav-item i {
+        font-size: 1.3rem;
+    }
+
+    .nav-item span {
+        font-size: 0.65rem;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+    }
+
+    .nav-item.active {
+        color: var(--gold);
+    }
+
+    /* Adjust Module Layouts for App Style */
+    #module-container {
+        padding-top: 20px;
     }
 }
 
-@media (max-width: 480px) {
-    .top-nav {
-        padding: 8px 10px;
-    }
-    .brand {
-        font-size: 0.85rem;
-    }
-    .dock-btn span,
-    .dock-btn {
-        font-size: 0;
-    }
-    .dock-btn i {
-        font-size: 1.3rem;
-    }
-    .dock-btn {
-        padding: 12px;
-        font-size: 0;
-    }
-    /* Show icon only — restore icon font-size */
-    .dock-btn i {
-        font-size: 1.2rem;
-        color: #888;
-    }
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes ticker {

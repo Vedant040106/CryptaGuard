@@ -311,34 +311,22 @@ function router(moduleName) {
     }
 
     // --- STANDARD ROUTING LOGIC ---
-    const heroSlider = document.getElementById('hero-slider');
-    if(heroSlider) heroSlider.classList.add('hidden');
-    
-    const dashboardView = document.getElementById('dashboard-view');
-    if(dashboardView) dashboardView.classList.add('hidden');
+    document.getElementById('hero-slider').classList.add('hidden');
     
     const dock = document.getElementById('main-dock');
     if(dock) dock.style.display = 'none';
 
     const container = document.getElementById('module-container');
     const content = document.getElementById('module-content');
-    if (container) container.classList.remove('hidden');
+    container.classList.remove('hidden');
     
     if(templates[moduleName]) {
         content.innerHTML = templates[moduleName];
         
         // Initialize logic for specific modules
-        if(moduleName === 'support' && isLoggedIn) {
-            setTimeout(() => ChatSystem.init(), 100);
-            setActiveNav('nav-chat');
-        }
-        if(moduleName === 'history' && isLoggedIn) {
-            setTimeout(() => ModuleSystem.loadHistory(), 100);
-            setActiveNav('nav-history');
-        }
-        if(moduleName === 'dashboard') {
-            setTimeout(() => ModuleSystem.loadNews(), 100);
-        }
+        if(moduleName === 'support' && isLoggedIn) setTimeout(() => ChatSystem.init(), 100);
+        if(moduleName === 'history' && isLoggedIn) setTimeout(() => ModuleSystem.loadHistory(), 100);
+        if(moduleName === 'dashboard') setTimeout(() => ModuleSystem.loadNews(), 100);
     } else {
         content.innerHTML = `<h1 style="text-align:center; margin-top:100px;">COMING SOON</h1>`;
     }
@@ -349,22 +337,9 @@ function showHome() {
     const container = document.getElementById('module-container');
     if(container) container.classList.add('hidden');
     
-    const heroSlider = document.getElementById('hero-slider');
-    if(heroSlider) heroSlider.classList.remove('hidden');
-
-    const dashboardView = document.getElementById('dashboard-view');
-    if(dashboardView) dashboardView.classList.remove('hidden');
+    const slider = document.getElementById('hero-slider');
+    if(slider) slider.classList.remove('hidden');
     
     const dock = document.getElementById('main-dock');
     if(dock) dock.style.display = 'flex';
-
-    // Reset mobile nav active state
-    setActiveNav('nav-home');
-}
-
-function setActiveNav(navId) {
-    const navItems = document.querySelectorAll('.nav-item');
-    navItems.forEach(item => item.classList.remove('active'));
-    const activeItem = document.getElementById(navId);
-    if (activeItem) activeItem.classList.add('active');
 }

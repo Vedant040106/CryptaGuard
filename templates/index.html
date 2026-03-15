@@ -34,167 +34,100 @@
 
     <header class="top-nav">
         <div class="brand" onclick="location.reload()">
-            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="CG" style="height: 35px; border-radius: 5px; margin-right: 10px;">
-            <span class="desktop-only">CRYPTA GUARD</span>
-            <span class="mobile-only">CRYPTA</span>
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="CG" style="height: 40px; vertical-align:middle; margin-right:10px;">
+            CRYPTA GUARD
         </div>
         
-        <div class="status-indicator desktop-only">
+        <div class="status-indicator">
             <span class="dot"></span> SYSTEM ONLINE
         </div>
 
         <div class="auth-status">
+            <span style="color:var(--gold); font-family:'Orbitron'; font-size:0.9rem; letter-spacing:1px;">
+                HI, {{ username }}
+            </span>
+            
             {% if logged_in %}
-                <span class="desktop-only" style="color:var(--gold); font-family:'Orbitron'; font-size:0.9rem; letter-spacing:1px; margin-right: 10px;">
-                    HI, {{ username }}
-                </span>
-                <a href="{{ url_for('logout') }}" class="cyber-btn logout-btn">[LOGOUT]</a>
+                <a href="{{ url_for('logout') }}" style="margin-left:15px; color:#666; text-decoration:none; font-size:0.8rem;">[LOGOUT]</a>
             {% else %}
-                <a href="{{ url_for('login') }}" class="cyber-btn login-btn">AUTH</a>
+                <a href="{{ url_for('login') }}" class="cyber-btn" style="padding: 5px 15px; font-size: 0.8rem; margin-top:0; margin-left: 15px;">LOGIN / REGISTER</a>
             {% endif %}
         </div>
     </header>
 
     <main id="app-root">
-        <!-- Dashboard View -->
-        <div id="dashboard-view">
-            <!-- Hero Slider (Desktop Only) -->
-            <div class="slider-container desktop-only" id="hero-slider">
-                <div class="panel active" id="p-phishing">
-                    <h2 class="vertical-title">PHISHING</h2>
-                    <div class="panel-content">
-                        <h3 class="panel-title"><i class="fa-solid fa-fish-fins"></i> Phishing</h3>
-                        <div class="panel-desc">
-                            <p>Deep scan URLs for deceptive patterns.</p>
-                            <button class="cyber-btn" onclick="router('phishing')">SCAN URL</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="panel" id="p-stego">
-                    <h2 class="vertical-title">STEGO LAB</h2>
-                    <div class="panel-content">
-                        <h3 class="panel-title"><i class="fa-solid fa-image"></i> Stego Lab</h3>
-                        <div class="panel-desc">
-                            <p>Hide intelligence within image pixels.</p>
-                            <button class="cyber-btn" onclick="router('steganography')">OPEN LAB</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="panel" id="p-malware">
-                    <h2 class="vertical-title">MALWARE</h2>
-                    <div class="panel-content">
-                        <h3 class="panel-title"><i class="fa-solid fa-bug"></i> Malware</h3>
-                        <div class="panel-desc">
-                            <p>Heuristic analysis of suspicious files.</p>
-                            <button class="cyber-btn" onclick="router('malware')">ANALYZE</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="panel" id="p-qr">
-                    <h2 class="vertical-title">QR GUARD</h2>
-                    <div class="panel-content">
-                        <h3 class="panel-title"><i class="fa-solid fa-qrcode"></i> QR Guard</h3>
-                        <div class="panel-desc">
-                            <p>Secure QR generation and fraud detection.</p>
-                            <button class="cyber-btn" onclick="router('qr')">ACCESS</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="panel" id="p-crypto">
-                    <h2 class="vertical-title">CRYPTO</h2>
-                    <div class="panel-content">
-                        <h3 class="panel-title"><i class="fa-solid fa-lock"></i> Crypto</h3>
-                        <div class="panel-desc">
-                            <p>Military-grade text encryption engine.</p>
-                            <button class="cyber-btn" onclick="router('encryption')">ACCESS</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="panel" id="p-password">
-                    <h2 class="vertical-title">PASS GEN</h2>
-                    <div class="panel-content">
-                        <h3 class="panel-title"><i class="fa-solid fa-key"></i> Pass Gen</h3>
-                        <div class="panel-desc">
-                            <p>Entropy-based password generator.</p>
-                            <button class="cyber-btn" onclick="router('password')">GENERATE</button>
-                        </div>
+        
+        <div class="slider-container" id="hero-slider">
+            
+            <div class="panel active" id="p-phishing">
+                <h2 class="vertical-title">PHISHING</h2>
+                <div class="panel-content">
+                    <h3 class="panel-title"><i class="fa-solid fa-fish-fins"></i> Phishing</h3>
+                    <div class="panel-desc">
+                        <p>Deep scan URLs for deceptive patterns.</p>
+                        <button class="cyber-btn" onclick="router('phishing')">SCAN URL</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Mobile Card Grid (Mobile Only) -->
-            <div class="mobile-dashboard mobile-only">
-                <div class="mobile-header">
-                    <h2>SECURITY HUB</h2>
-                    <p>Select an operational module</p>
-                </div>
-                <div class="mobile-card-grid">
-                    <div class="mobile-card" onclick="router('phishing')">
-                        <div class="card-icon"><i class="fa-solid fa-fish-fins"></i></div>
-                        <span>Phishing</span>
-                    </div>
-                    <div class="mobile-card" onclick="router('malware')">
-                        <div class="card-icon"><i class="fa-solid fa-bug"></i></div>
-                        <span>Malware</span>
-                    </div>
-                    <div class="mobile-card" onclick="router('steganography')">
-                        <div class="card-icon"><i class="fa-solid fa-image"></i></div>
-                        <span>Stego</span>
-                    </div>
-                    <div class="mobile-card" onclick="router('qr')">
-                        <div class="card-icon"><i class="fa-solid fa-qrcode"></i></div>
-                        <span>QR Guard</span>
-                    </div>
-                    <div class="mobile-card" onclick="router('encryption')">
-                        <div class="card-icon"><i class="fa-solid fa-lock"></i></div>
-                        <span>Crypto</span>
-                    </div>
-                    <div class="mobile-card" onclick="router('password')">
-                        <div class="card-icon"><i class="fa-solid fa-key"></i></div>
-                        <span>Vault</span>
-                    </div>
-                </div>
-                
-                <div class="mobile-info-section">
-                    <div class="mobile-info-card" onclick="router('chatbot')">
-                        <i class="fa-solid fa-robot"></i>
-                        <div class="info-content">
-                            <h3>AI Neural Link</h3>
-                            <p>Real-time assistant active</p>
-                        </div>
-                        <i class="fa-solid fa-chevron-right"></i>
+            <div class="panel" id="p-stego">
+                <h2 class="vertical-title">STEGO LAB</h2>
+                <div class="panel-content">
+                    <h3 class="panel-title"><i class="fa-solid fa-image"></i> Stego Lab</h3>
+                    <div class="panel-desc">
+                        <p>Hide intelligence within image pixels.</p>
+                        <button class="cyber-btn" onclick="router('steganography')">OPEN LAB</button>
                     </div>
                 </div>
             </div>
+
+            <div class="panel" id="p-malware">
+                <h2 class="vertical-title">MALWARE</h2>
+                <div class="panel-content">
+                    <h3 class="panel-title"><i class="fa-solid fa-bug"></i> Malware</h3>
+                    <div class="panel-desc">
+                        <p>Heuristic analysis of suspicious files.</p>
+                        <button class="cyber-btn" onclick="router('malware')">ANALYZE</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel" id="p-qr">
+                <h2 class="vertical-title">QR GUARD</h2>
+                <div class="panel-content">
+                    <h3 class="panel-title"><i class="fa-solid fa-qrcode"></i> QR Guard</h3>
+                    <div class="panel-desc">
+                        <p>Secure QR generation and fraud detection.</p>
+                        <button class="cyber-btn" onclick="router('qr')">ACCESS</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel" id="p-crypto">
+                <h2 class="vertical-title">CRYPTO</h2>
+                <div class="panel-content">
+                    <h3 class="panel-title"><i class="fa-solid fa-lock"></i> Crypto</h3>
+                    <div class="panel-desc">
+                        <p>Military-grade text encryption engine.</p>
+                        <button class="cyber-btn" onclick="router('encryption')">ACCESS</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel" id="p-password">
+                <h2 class="vertical-title">PASS GEN</h2>
+                <div class="panel-content">
+                    <h3 class="panel-title"><i class="fa-solid fa-key"></i> Pass Gen</h3>
+                    <div class="panel-desc">
+                        <p>Entropy-based password generator.</p>
+                        <button class="cyber-btn" onclick="router('password')">GENERATE</button>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
-        <!-- 4. FLOATING ACTION BUTTON (Mobile Only) -->
-        <div class="mobile-fab mobile-only" onclick="router('chatbot')">
-            <i class="fa-solid fa-comment-dots"></i>
-        </div>
-
-        <!-- 5. BOTTOM NAVIGATION (Mobile Only) -->
-        <nav class="mobile-bottom-nav mobile-only">
-            <div class="nav-item active" id="nav-home" onclick="location.reload()">
-                <i class="fa-solid fa-house"></i>
-                <span>Home</span>
-            </div>
-            <div class="nav-item" id="nav-chat" onclick="router('support')">
-                <i class="fa-solid fa-comments"></i>
-                <span>Chat</span>
-            </div>
-            <div class="nav-item" id="nav-history" onclick="router('history')">
-                <i class="fa-solid fa-clock-rotate-left"></i>
-                <span>Logs</span>
-            </div>
-        </nav>
-
-        <div class="bottom-dock desktop-only" id="main-dock">
+        <div class="bottom-dock" id="main-dock">
             <button class="dock-btn" onclick="router('history')">
                 <i class="fa-solid fa-clock-rotate-left"></i> HISTORY
             </button>
